@@ -47,6 +47,8 @@
 - 先找出最大值的位置，遍历一次  
 - 从左开始遍历到最大值的位置，lmax记录沿途的最大值，arr[i]与lmax相减就能得到位置i上的储水量。大于lmax就更新arr[i]。  
 - 然后从右开始遍历到最大值的位置，rmax记录沿途的最大值，arr[i]与rmax相减就能得到位置i上的储水量。大于rmax就更新arr[i]。  
+其实意思都一样都是**先计算能确定瓶颈的数值**。  
+
 ```java  
    public int trap(int[] height) {  
     	if(height==null || height.length==0) return 0;  
