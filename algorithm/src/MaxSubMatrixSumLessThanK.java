@@ -46,15 +46,14 @@ public class MaxSubMatrixSumLessThanK {
 	private int search(int[] inc,int end,int rk){
 		int l=0;
 		int r=end;
-		while(l<=r){//找第一个大于等于rk的数
-			int mid = (r>>1)+(l>>1);
+		while(l<r){//找第一个大于等于rk的数
+			int mid = (r>>1)-(l>>1);
 			if(inc[mid]>=rk){
-				//r=mid;
-				r=mid-1;
+				r=mid;
 			}else{
 //				l=mid;//数组中没有大于等于rk的数的话会陷入死循环
 				l=mid+1;
-			}
+			}//l==r时跳出循环
 		}
 		return l;
 	}
