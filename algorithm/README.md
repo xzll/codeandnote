@@ -163,7 +163,7 @@ public class RussianDollEnvelopes_354 {
 				int m=(l+r)/2;
 				if(ends[m]<h){//找到最后只剩下一个值，如果是小于h的，l++，扩充了一位
 					l=m+1;
-				}else{//如果最后一个值大于等于h，就说明找到了第一个大于等于h的值，覆盖它
+				}else{//如果最后一个值大于等于h，就说明找到了第一个大于等于h的值，就是l所在位置
 					r=m-1;
 				}
 			}//所以最后l指向的就是h的位置
@@ -655,14 +655,15 @@ public class MaxSubMatrixSumLessThanK {
 	private int search(int[] inc,int end,int rk){
 		int l=0;
 		int r=end;
-		while(l<r){//找第一个大于等于rk的数
-			int mid = (r>>1)-(l>>1);
+		while(l<=r){//找第一个大于等于rk的数
+			int mid = (r>>1)+(l>>1);
 			if(inc[mid]>=rk){
-				r=mid;
+				//r=mid;
+				r=mid-1;
 			}else{
 //				l=mid;//数组中没有大于等于rk的数的话会陷入死循环
 				l=mid+1;
-			}//l==r时跳出循环
+			}
 		}
 		return l;
 	}
