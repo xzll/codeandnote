@@ -781,3 +781,112 @@ public class SubMatrixMaxSumOnlyOne {
 }
 
 ```
+  
+11. 给定一棵完全二叉树的头节点head，求其中的节点个数。  
+只想到深度遍历所有结点，不知道还能怎么弄。O(n)  
+  
+O((logn)^2) ：  
+高度为l的满二叉树节点数为2^l-1  
+递归用公式计算。  
+  
+```java
+package completetree;
+
+/**
+ * 给定一棵完全二叉树的头节点head，求其中的节点个数。
+ * @author YJ
+ *
+ */
+public class CompleteTreeNodeNumber {
+	public static class Node {
+		public int value;
+		public Node left;
+		public Node right;
+
+		public Node(int value) {
+			this.value = value;
+		}
+	}
+
+	public static int nodeNum(Node head) {
+		if (head == null) {
+			return 0;
+		}
+		return bs(head, 1, mostLeftLevel(head, 1));
+	}
+
+	/**
+	 * 递归计算数量
+	 * @param node 
+	 * @param l 当前结点高度
+	 * @param h 整颗树的高度
+	 * @return
+	 */
+	public static int bs(Node node, int l, int h) {
+		if (l == h) {
+			return 1;
+		}
+		if (mostLeftLevel(node.right, l + 1) == h) {//如果右子树的最左结点高度等于树的高度，说明左子树确定叶结点高度都是h。
+			return (1 << (h - l)) + bs(node.right, l + 1, h);//左子树结点个数确定，递归右结点
+		} else {//如果不等说明右子树叶节点高度都是h-1，所以可以确定右子树结点个数
+			return (1 << (h - l - 1)) + bs(node.left, l + 1, h);//右子树结点个数，递归左结点
+		}
+	}
+
+	/**
+	 * 返回子树最左边结点在整棵树上的高度
+	 * @param node 子树根结点
+	 * @param level 当前结点的高度
+	 * @return
+	 */
+	public static int mostLeftLevel(Node node, int level) {
+		while (node != null) {
+			level++;
+			node = node.left;
+		}
+		return level - 1;
+	}
+}
+
+```  
+  
+12. 给定一个字符串类型的数组，其中不含有重复的字符串，如果其中某一个字符串是另一个字符串的前缀，返回true；如果没有任何一个字符串是另一个字符串的前缀，返回false。  
+```java  
+import java.util.HashMap;
+
+/**
+ * 给定一个字符串类型的数组，其中不含有重复的字符串，如果其中某一个字符串是另一个字符串的前缀，返回true；如果没有任何一个字符串是另一个字符串的前缀，返回false。
+ * 字符在边上，边是hashmap的key，对应的value是下一个点
+ * 是前缀有两种情况：
+ * 1. 当前字符串是之前字符串的前缀，递归完还在树中
+ * 2. 之前字符串是当前字符串的前缀，递归时遇到其他字符串的中止点
+ * @author YJ
+ *
+ */
+public class Tries {
+	private HashMap<Character,Tries> children = new HashMap<Character,Tries>();
+	private boolean end = false;//当前点是否是一个字符串的终止。
+	
+	public boolean addAndCheck(char[] chs,int i) {//i是下标，递归用
+		if(end) {//如果遇到其他字符串的中止点了，之前字符串是当前字符串的前缀，返回true
+			return true;
+		}
+		if(i==chs.length) {//如果数组元素递归完了
+			end = true;//将当前结点的end设为true，表明这个点是一个字符串的终止点
+			return !children.isEmpty();//如果下一条边没有值，就说明当前字符串不是之前字符串的前缀，或者当前字符串与其中一个字符串相同，但是规定不含有重复的字符串，所以这个可能pass
+		}
+		if(!children.containsKey(chs[i])) {//如果当前结点的所有边上都不是该值
+			children.put(chs[i], new Tries());//增加新的边
+		}
+		return children.get(chs[i]).addAndCheck(chs, i+1);//递归
+		
+	}
+	public static void main(String[] args) {
+		Tries root = new Tries();
+		System.out.println(root.addAndCheck(new char[]{'a','b','c','d','e'}, 0));
+		System.out.println(root.addAndCheck(new char[]{'a','b','c'}, 0));
+		System.out.println(root.addAndCheck(new char[]{'b','c'}, 0));
+	}
+}
+
+```
